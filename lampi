@@ -1,0 +1,493 @@
+#!/usr/bin/python3
+from os import system
+from sys import argv
+from re import findall
+
+############################################################################################## Start Variables
+help_command = r"""lampi 1.0.0 - (C) 2024
+https://github.com/amirkoshkian/lampi
+
+ _                       _ 
+| | __ _ _ __ ___  _ __ (_)
+| |/ _` | '_ ` _ \| '_ \| |
+| | (_| | | | | | | |_) | |
+|_|\__,_|_| |_| |_| .__/|_|
+                  |_|
+
+Usage: sudo lampi
+
+Options:
+    start : Start LAMP (Apache, MariaDB and others)
+    startapache : Start only Apache
+    startmariadb : Start only MariaDB
+    
+    stop : Stop LAMP (Apache, MariaDB and others)
+    stopapache : Stop only Apache
+    stopmariadb : Stop only MariaDB
+    
+    reload : Reload LAMP (Apache, MariaDB and others)
+    reloadapache : Reload only Apache
+    reloadmariadb : Reload only MariaDB
+    
+    enable : Enable Service LAMP (Apache, MariaDB and others)
+    enableapache : Enable only Service Apache
+    enablemariadb : Enable only Service MariaDB
+    
+    disable : Disable Service LAMP (Apache, MariaDB and others)
+    disableapache : Disable only Service Apache
+    disablemariadb : Disable only Service MariaDB
+    
+    restart : Stop and Start LAMP
+    
+    enablessl : Enable SSL support for Apache
+    disablessl : Disable SSL support for Apache
+    
+    changedir : Change Root Directory server (Usage: sudo lampi changedir /document_root)
+
+    changepass : Change PhpMyAdmin Root Password
+    allownopass : Set Root Login Without Password
+    
+    configtest : Apache Configuration Check
+    
+    install : Install LAMP (Apache, MariaDB, PHP and others)
+    uninstall : Uninstall LAMP (Apache, MariaDB, PHP and others)"""
+############################################################################################### End Variables
+
+
+############################################################################################### Start Section Functions
+######################################## Start Section Start Functions
+# Start Section Function Start
+def Start():
+    system("sudo systemctl start apache2")
+    system("sudo systemctl start mariadb")
+    system("sudo systemctl start mysql")
+    print("LAMP Successfuly Started")
+
+
+# End Section Function Start
+
+
+# Start Section Function StartApache
+def StartApache():
+    system("sudo systemctl start apache2")
+    print("Apache Successfuly Started")
+
+
+# End Section Function StartApache
+
+
+# Start Section Function StartMariadb
+def StartMariadb():
+    system("sudo systemctl start mariadb")
+    system("sudo systemctl start mysql")
+    print("Mariadb Successfuly Started")
+
+
+# End Section Function StartMariadb
+
+
+# Start Section Function Stop
+def Stop():
+    system("sudo systemctl stop apache2")
+    system("sudo systemctl stop mariadb")
+    system("sudo systemctl stop mysql")
+    print("LAMP Successfuly Stoped")
+
+
+# End Section Function Stop
+
+
+# Start Section Function StopApache
+def StopApache():
+    system("sudo systemctl stop apache2")
+    print("Apache Successfuly Stoped")
+
+
+# End Section Function StopApache
+
+
+# Start Section Function StopMariadb
+def StopMariadb():
+    system("sudo systemctl stop mariadb")
+    system("sudo systemctl stop mysql")
+    print("Mariadb Successfuly Stoped")
+
+
+# End Section Function StopMariadb
+
+
+# Start Section Function Reload
+def Reload():
+    system("sudo systemctl reload apache2")
+    system("sudo systemctl restart mariadb")
+    system("sudo systemctl restart mysql")
+    print("LAMP Successfuly Reloaded")
+
+
+# End Section Function Reload
+
+
+# Start Section Function ReloadApache
+def ReloadApache():
+    system("sudo systemctl reload apache2")
+    print("Apache Successfuly Reloaded")
+
+
+# End Section Function ReloadApache
+
+
+# Start Section Function ReloadMariadb
+def ReloadMariadb():
+    system("sudo systemctl restart mariadb")
+    system("sudo systemctl restart mysql")
+    print("Mariadb Successfuly Reloaded")
+
+
+# End Section Function ReloadMariadb
+
+
+# Start Section Function Enable
+def Enable():
+    system("sudo systemctl enable apache2")
+    system("sudo systemctl enable mariadb")
+    system("sudo systemctl enable mysql")
+    print("LAMP Successfuly Enabled")
+
+
+# End Section Function Enable
+
+
+# Start Section Function EnableApache
+def EnableApache():
+    system("sudo systemctl enable apache2")
+    print("Apache Successfuly Enabled")
+
+
+# End Section Function EnableApache
+
+
+# Start Section Function EnableMariadb
+def EnableMariadb():
+    system("sudo systemctl enable mariadb")
+    system("sudo systemctl enable mysql")
+    print("Mariadb Successfuly Enabled")
+
+
+# End Section Function EnableMariadb
+
+
+# Start Section Function Disable
+def Disable():
+    system("sudo systemctl disable apache2")
+    system("sudo systemctl disable mariadb")
+    system("sudo systemctl disable mysql")
+    print("LAMP Successfuly Disabled")
+
+
+# End Section Function Disable
+
+
+# Start Section Function DisableApache
+def DisableApache():
+    system("sudo systemctl disable apache2")
+    print("Apache Successfuly Disabled")
+
+
+# End Section Function DisableApache
+
+
+# Start Section Function DisableMariadb
+def DisableMariadb():
+    system("sudo systemctl disable mariadb")
+    system("sudo systemctl disable mysql")
+    print("Mariadb Successfuly Disabled")
+
+
+# End Section Function DisableMariadb
+
+
+# Start Section Function Restart
+def Restart():
+    system("sudo systemctl restart apache2")
+    system("sudo systemctl restart mariadb")
+    system("sudo systemctl restart mysql")
+    system("sudo systemctl daemon-reload")
+    print("LAMP Successfuly Restarted")
+
+
+# End Section Function Restart
+
+
+# Start Section Function EnableSSL
+def EnableSSL():
+    system(
+        "sudo sed -i 's/SSLEngine off/SSLEngine on/' /etc/apache2/sites-available/*ssl.conf"
+    )
+    system("sudo systemctl restart apache2")
+    print("LAMP SSL Successfuly Enabled")
+
+
+# End Section Function EnableSSL
+
+
+# Start Section Function DisableSSL
+def DisableSSL():
+    system(
+        "sudo sed -i 's/SSLEngine on/SSLEngine off/' /etc/apache2/sites-available/*ssl.conf"
+    )
+    system("sudo systemctl restart apache2")
+    print("LAMP SSL Successfuly Disabled")
+
+
+# End Section Function DisableSSL
+
+
+# Start Section Function ChangeDirectory
+def ChangeDirectory():
+    if len(argv) <= 2:
+        system("sudo clear")
+        print("Please Enter document_root")
+    else:
+        document_root = argv[2]
+
+        with open("/etc/apache2/apache2.conf", "r+") as main_file:
+            file_data = main_file.read()
+            file_data = file_data.replace(
+                findall("<Directory .*>", file_data)[2],
+                f"<Directory {document_root}>",
+            )
+            main_file.seek(0)
+            main_file.write(file_data.strip())
+            main_file.close()
+
+        with open(
+            "/etc/apache2/sites-available/000-default.conf", "r"
+        ) as main_file_1, open(
+            "/etc/apache2/sites-available/default-ssl.conf", "r"
+        ) as main_file_2:
+            file_data_1 = main_file_1.read()
+            file_data_1 = file_data_1.replace(
+                findall("DocumentRoot .*", file_data_1)[0],
+                f"DocumentRoot {document_root}",
+            )
+            file_data_2 = main_file_2.read()
+            file_data_2 = file_data_2.replace(
+                findall("DocumentRoot .*", file_data_2)[0],
+                f"DocumentRoot {document_root}",
+            )
+
+        with open(
+            "/etc/apache2/sites-available/000-default.conf", "w"
+        ) as main_file_1, open(
+            "/etc/apache2/sites-available/default-ssl.conf", "w"
+        ) as main_file_2:
+            main_file_1.write(file_data_1.strip())
+            main_file_2.write(file_data_2.strip())
+            main_file_1.close()
+            main_file_2.close()
+
+        system(f"sudo chmod 755 {document_root}")
+        system("sudo systemctl restart apache2")
+        print("LAMP Path Successfuly Changeed")
+
+
+# End Section Function ChangeDirectory
+
+
+# Start Section Function ChangePass
+def ChangePass():
+    system("sudo mysql_secure_installation")
+    system("sudo systemctl restart apache2")
+    system("sudo systemctl restart mariadb")
+    system("sudo systemctl restart mysql")
+    print("PhpMyAdmin Root Password Successfuly Changeed")
+
+
+# End Section Function ChangePass
+
+
+# Start Section Function AllowNoPass
+def AllowNoPass():
+    with open("/etc/phpmyadmin/config.inc.php", "r") as main_file:
+        file_data = main_file.read()
+        if file_data.find("// $cfg['Servers'][$i]['AllowNoPassword'] = TRUE;") >= 1:
+            file_data = file_data.replace(
+                "// $cfg['Servers'][$i]['AllowNoPassword'] = TRUE;",
+                "$cfg['Servers'][$i]['AllowNoPassword'] = TRUE;",
+            )
+        elif file_data.find("$cfg['Servers'][$i]['AllowNoPassword'] = TRUE;"):
+            file_data = file_data.replace(
+                "$cfg['Servers'][$i]['AllowNoPassword'] = TRUE;",
+                "// $cfg['Servers'][$i]['AllowNoPassword'] = TRUE;",
+            )
+
+    with open("/etc/phpmyadmin/config.inc.php", "w") as main_file:
+        main_file.write(file_data.strip())
+        main_file.close()
+    system("sudo systemctl restart apache2")
+    print("Root Login Without Password Successfuly Complete")
+
+
+# End Section Function AllowNoPass
+
+
+# Start Section Function ConfigTest
+def ConfigTest():
+    system("sudo apache2ctl configtest")
+    print("Apache Configuration Check Successfuly Complete")
+
+
+# End Section Function ConfigTest
+
+
+# Start Section Function Install
+def Install():
+    system(
+        "sudo apt install sed apache2 php libapache2-mod-php php-mysql mariadb-server phpmyadmin mariadb-client-compat -y"
+    )
+    system("sudo mysql_secure_installation")
+    system(
+        """sudo cat >> "/etc/apache2/apache2.conf" << EOF
+
+# generated by lampi
+Include /etc/phpmyadmin/apache.conf
+EOF"""
+    )
+    system(
+        "sudo sed -i 's/post_max_size = .*/post_max_size = 750M/' /etc/php/*.*/apache2/php.ini"
+    )
+    system(
+        "sudo sed -i 's/upload_max_filesize = .*/upload_max_filesize = 750M/' /etc/php/*.*/apache2/php.ini"
+    )
+    system(
+        "sudo sed -i 's/max_execution_time = .*/max_execution_time = 5000/' /etc/php/*.*/apache2/php.ini"
+    )
+    system(
+        "sudo sed -i 's/max_input_time = .*/max_input_time = 3000/' /etc/php/*.*/apache2/php.ini"
+    )
+    system(
+        "sudo sed -i 's/memory_limit = .*M/memory_limit = 1000M/' /etc/php/*.*/apache2/php.ini"
+    )
+    system(
+        "sudo sed -i 's/AllowOverride None/AllowOverride All/' /etc/apache2/apache2.conf"
+    )
+    system("sudo a2enmod ssl")
+    system("sudo a2enmod headers")
+    system("sudo a2ensite default-ssl")
+    system("sudo systemctl restart apache2")
+    system("sudo systemctl restart mariadb")
+    system("sudo systemctl restart mysql")
+    system("sudo systemctl enable apache2")
+    system("sudo systemctl enable mariadb")
+    system("sudo systemctl enable mysql")
+    system("sudo systemctl daemon-reload")
+    print("LAMP Successfuly Installed")
+
+
+# End Section Function Install
+
+
+# Start Section Function Uninstall
+def Uninstall():
+    system("sudo systemctl stop apache2")
+    system("sudo systemctl stop mariadb")
+    system("sudo systemctl stop mysql")
+    system(
+        "sudo apt purge apache2 php libapache2-mod-php php-mysql mariadb-server phpmyadmin mariadb-client-compat -y"
+    )
+    system("sudo apt autoremove")
+    system("sudo apt autopurge")
+    print("LAMP Successfuly Uninstalled")
+
+
+# End Section Function Uninstall
+######################################## End Section Stop Functions
+############################################################################################### End Section Functions
+
+############################################################################################### Start Section Main
+try:
+    if len(argv) == 1:
+        system("sudo clear")
+        print(help_command)
+    elif argv[1] == "start":
+        system("sudo clear")
+        Start()
+    elif argv[1] == "startapache":
+        system("sudo clear")
+        StartApache()
+    elif argv[1] == "startmariadb":
+        system("sudo clear")
+        StartMariadb()
+    elif argv[1] == "stop":
+        system("sudo clear")
+        Stop()
+    elif argv[1] == "stopapache":
+        system("sudo clear")
+        StopApache()
+    elif argv[1] == "stopmariadb":
+        system("sudo clear")
+        StopMariadb()
+    elif argv[1] == "reload":
+        system("sudo clear")
+        Reload()
+    elif argv[1] == "reloadapache":
+        system("sudo clear")
+        ReloadApache()
+    elif argv[1] == "reloadmariadb":
+        system("sudo clear")
+        ReloadMariadb()
+    elif argv[1] == "enable":
+        system("sudo clear")
+        Enable()
+    elif argv[1] == "enableapache":
+        system("sudo clear")
+        EnableApache()
+    elif argv[1] == "enablemariadb":
+        system("sudo clear")
+        EnableMariadb()
+    elif argv[1] == "disable":
+        system("sudo clear")
+        Disable()
+    elif argv[1] == "disableapache":
+        system("sudo clear")
+        DisableApache()
+    elif argv[1] == "disablemariadb":
+        system("sudo clear")
+        DisableMariadb()
+    elif argv[1] == "restart":
+        system("sudo clear")
+        Restart()
+    elif argv[1] == "enablessl":
+        system("sudo clear")
+        EnableSSL()
+    elif argv[1] == "disablessl":
+        system("sudo clear")
+        DisableSSL()
+    elif argv[1] == "changedir":
+        system("sudo clear")
+        ChangeDirectory()
+    elif argv[1] == "changepass":
+        system("sudo clear")
+        ChangePass()
+    elif argv[1] == "allownopass":
+        system("sudo clear")
+        AllowNoPass()
+    elif argv[1] == "configtest":
+        system("sudo clear")
+        ConfigTest()
+    elif argv[1] == "install":
+        system("sudo clear")
+        Install()
+    elif argv[1] == "uninstall":
+        system("sudo clear")
+        Uninstall()
+    else:
+        system("sudo clear")
+        print(help_command)
+        print(
+            f"""
+ERROR `{argv[1]}` is an unknown argument"""
+        )
+except Exception as e:
+    print(e)
+############################################################################################### End Section Main
