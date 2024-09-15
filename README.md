@@ -33,3 +33,4 @@ sudo lampi
 ```
 
 # Image lampi
+![image](https://github.com/user-attachments/assets/6aa7b6df-bd44-4eb6-a822-0c6df1fd925d)
